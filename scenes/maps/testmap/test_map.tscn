@@ -1,0 +1,65 @@
+[gd_scene load_steps=9 format=3 uid="uid://b77xg3j31ewqe"]
+
+[ext_resource type="Script" uid="uid://o0e8ehfbn123" path="res://scenes/maps/testmap/test_map.gd" id="1_q3skd"]
+[ext_resource type="PackedScene" uid="uid://8ly5u63tf4v3" path="res://components/map/player_spawner/player_spawner.tscn" id="2_ie22t"]
+[ext_resource type="PackedScene" uid="uid://c1117xmdglv32" path="res://scenes/player/player.tscn" id="3_swv2l"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_swv2l"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_arum2"]
+sky_material = SubResource("ProceduralSkyMaterial_swv2l")
+
+[sub_resource type="Environment" id="Environment_mhfb8"]
+background_mode = 2
+sky = SubResource("Sky_arum2")
+tonemap_mode = 2
+
+[sub_resource type="BoxMesh" id="BoxMesh_q3skd"]
+size = Vector3(50, 1, 50)
+
+[sub_resource type="ConcavePolygonShape3D" id="ConcavePolygonShape3D_q3skd"]
+data = PackedVector3Array(-25, 0.5, 25, 25, 0.5, 25, -25, -0.5, 25, 25, 0.5, 25, 25, -0.5, 25, -25, -0.5, 25, 25, 0.5, -25, -25, 0.5, -25, 25, -0.5, -25, -25, 0.5, -25, -25, -0.5, -25, 25, -0.5, -25, 25, 0.5, 25, 25, 0.5, -25, 25, -0.5, 25, 25, 0.5, -25, 25, -0.5, -25, 25, -0.5, 25, -25, 0.5, -25, -25, 0.5, 25, -25, -0.5, -25, -25, 0.5, 25, -25, -0.5, 25, -25, -0.5, -25, 25, 0.5, 25, -25, 0.5, 25, 25, 0.5, -25, -25, 0.5, 25, -25, 0.5, -25, 25, 0.5, -25, -25, -0.5, 25, 25, -0.5, 25, -25, -0.5, -25, 25, -0.5, 25, 25, -0.5, -25, -25, -0.5, -25)
+
+[node name="TestMap" type="Node3D"]
+script = ExtResource("1_q3skd")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_mhfb8")
+
+[node name="PlayerSpawner" parent="." node_paths=PackedStringArray("players_node", "spawn_points") instance=ExtResource("2_ie22t")]
+player_scene = ExtResource("3_swv2l")
+players_node = NodePath("../Players")
+spawn_points = NodePath("../Layout/SpawnPoints")
+
+[node name="Players" type="Node3D" parent="."]
+
+[node name="Layout" type="Node3D" parent="."]
+
+[node name="Floor" type="MeshInstance3D" parent="Layout"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+mesh = SubResource("BoxMesh_q3skd")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Layout/Floor"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Layout/Floor/StaticBody3D"]
+shape = SubResource("ConcavePolygonShape3D_q3skd")
+
+[node name="Boxes" type="Node3D" parent="Layout"]
+
+[node name="SpawnPoints" type="Node3D" parent="Layout"]
+
+[node name="Marker3D" type="Marker3D" parent="Layout/SpawnPoints"]
+
+[node name="Marker3D2" type="Marker3D" parent="Layout/SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 0, 16)
+
+[node name="Marker3D3" type="Marker3D" parent="Layout/SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17, 0, -8)
+
+[node name="Marker3D4" type="Marker3D" parent="Layout/SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, -8)
+
+[node name="Marker3D5" type="Marker3D" parent="Layout/SpawnPoints"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 0, 16)

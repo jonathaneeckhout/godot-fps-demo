@@ -1,0 +1,31 @@
+[gd_scene load_steps=4 format=3 uid="uid://bkmv0iile3ix5"]
+
+[ext_resource type="Script" uid="uid://brq2ubn8qew02" path="res://scenes/main/main.gd" id="1_o5qli"]
+[ext_resource type="PackedScene" uid="uid://dqet8ncqxqr7j" path="res://scenes/ui/menus/main_menu/main_menu.tscn" id="2_iuonh"]
+[ext_resource type="PackedScene" uid="uid://b77xg3j31ewqe" path="res://scenes/maps/testmap/test_map.tscn" id="2_k2fmo"]
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_o5qli")
+map_scene = ExtResource("2_k2fmo")
+
+[node name="TestMap" parent="." instance=ExtResource("2_k2fmo")]
+
+[node name="UICanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="MainMenu" parent="UICanvasLayer" instance=ExtResource("2_iuonh")]
+unique_name_in_owner = true
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+
+[connection signal="hosted" from="UICanvasLayer/MainMenu" to="." method="_on_main_menu_hosted"]
+[connection signal="joined" from="UICanvasLayer/MainMenu" to="." method="_on_main_menu_joined"]
