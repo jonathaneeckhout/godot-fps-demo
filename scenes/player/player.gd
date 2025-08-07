@@ -10,11 +10,12 @@ var player_input: PlayerInput = null
 
 @export var model: Node3D = null
 @export var head: Node3D = null
-
+@export var hands: Node3D = null
 
 func _ready() -> void:
     assert(model != null, "Model is not set")
     assert(head != null, "Head is not set")
+    assert(hands != null, "Hands not set")
 
     player_input = get_node_or_null("PlayerInput")
     assert(player_input != null, "Player input missing")
@@ -22,7 +23,8 @@ func _ready() -> void:
     if peer_id == multiplayer.get_unique_id():
         model.hide()
     else:
-        print("Other player")
+        hands.hide()
+        %HUDCanvasLayer.hide()
 
 func _rollback_tick(delta: float, tick: int, is_fresh: bool) -> void:
     # Handle look left and right

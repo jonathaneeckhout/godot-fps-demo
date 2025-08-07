@@ -1,0 +1,48 @@
+[gd_scene load_steps=8 format=3 uid="uid://cqpsi760d154r"]
+
+[ext_resource type="Script" uid="uid://cnopxx35qoaph" path="res://scenes/weapons/pistol/pistol.gd" id="1_unxgq"]
+[ext_resource type="Script" uid="uid://chr4omg2hy3yu" path="res://addons/netfox/rewindable-action.gd" id="2_bvgyv"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_unxgq"]
+albedo_color = Color(0.154876, 0.154876, 0.154876, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_unxgq"]
+material = SubResource("StandardMaterial3D_unxgq")
+size = Vector3(0.2, 0.05, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bvgyv"]
+albedo_color = Color(0.266575, 0.266575, 0.266575, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_unxgq"]
+material = SubResource("StandardMaterial3D_bvgyv")
+top_radius = 0.01
+bottom_radius = 0.01
+height = 0.01
+
+[sub_resource type="BoxMesh" id="BoxMesh_bvgyv"]
+material = SubResource("StandardMaterial3D_unxgq")
+size = Vector3(0.1, 0.04, 0.03)
+
+[node name="Pistol" type="Node3D"]
+script = ExtResource("1_unxgq")
+
+[node name="Model" type="Node3D" parent="."]
+transform = Transform3D(-6.55671e-08, 0, -1.5, 0, 1.5, 0, 1.5, 0, -6.55671e-08, 0, 0, 0)
+
+[node name="Top" type="MeshInstance3D" parent="Model"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0397291, 0.025, 0)
+mesh = SubResource("BoxMesh_unxgq")
+
+[node name="Barrel" type="MeshInstance3D" parent="Model/Top"]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0.100271, 0, 0)
+mesh = SubResource("CylinderMesh_unxgq")
+skeleton = NodePath("../..")
+
+[node name="Handle" type="MeshInstance3D" parent="Model"]
+transform = Transform3D(0.258819, -0.965926, 0, 0.965926, 0.258819, 0, 0, 0, 1, -0.0304258, -0.025472, 0)
+mesh = SubResource("BoxMesh_bvgyv")
+
+[node name="FireAction" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_bvgyv")
+metadata/_custom_type_script = "uid://chr4omg2hy3yu"
