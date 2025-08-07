@@ -1,0 +1,54 @@
+[gd_scene load_steps=10 format=3 uid="uid://dt4q2fdxtylxi"]
+
+[ext_resource type="Script" uid="uid://cnaibm774dc6y" path="res://scenes/weapons/rifle/rifle.gd" id="1_ch8gi"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_f6ouy"]
+albedo_color = Color(0.0962047, 0.0962048, 0.0962047, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_f6ouy"]
+material = SubResource("StandardMaterial3D_f6ouy")
+size = Vector3(0.1, 0.1, 0.6)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ch8gi"]
+albedo_color = Color(0.537226, 0.27662, 0.0241041, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ch8gi"]
+material = SubResource("StandardMaterial3D_ch8gi")
+size = Vector3(0.05, 0.2, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_upv3j"]
+albedo_color = Color(0.215902, 0.215902, 0.215902, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_upv3j"]
+material = SubResource("StandardMaterial3D_upv3j")
+size = Vector3(0.05, 0.2, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hx47o"]
+albedo_color = Color(0.230315, 0.230315, 0.230315, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_f6ouy"]
+material = SubResource("StandardMaterial3D_hx47o")
+top_radius = 0.01
+bottom_radius = 0.01
+height = 0.01
+
+[node name="Rifle" type="Node3D"]
+script = ExtResource("1_ch8gi")
+
+[node name="Body" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0.05, 0.2)
+mesh = SubResource("BoxMesh_f6ouy")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 0.866025, -0.5, 0, 0.5, 0.866025, 0, -0.1, -0.2)
+mesh = SubResource("BoxMesh_ch8gi")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0.1)
+mesh = SubResource("BoxMesh_upv3j")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Body"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0.3)
+mesh = SubResource("CylinderMesh_f6ouy")

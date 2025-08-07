@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://duwpp7fduyeq5"]
+
+[ext_resource type="Script" uid="uid://bpug8wb7ff5k4" path="res://components/player/weapon_synchronizer/weapon_synchronizer.gd" id="1_j71hl"]
+[ext_resource type="Script" uid="uid://chr4omg2hy3yu" path="res://addons/netfox/rewindable-action.gd" id="2_yxk4y"]
+
+[node name="WeaponSynchronizer" type="Node"]
+script = ExtResource("1_j71hl")
+
+[node name="FireAction" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("2_yxk4y")
+metadata/_custom_type_script = "uid://chr4omg2hy3yu"

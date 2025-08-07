@@ -1,16 +1,18 @@
 class_name Player
 extends CharacterBody3D
 
-var peer_id: int = 0
-
-var player_input: PlayerInput = null
-
 @export var speed: float = 8.0
 @export var jump_force: float = 5.0
 
 @export var model: Node3D = null
 @export var head: Node3D = null
 @export var hands: Node3D = null
+
+var peer_id: int = 0
+
+var player_input: PlayerInput = null
+var weapon_synchronizer: WeaponSynchronizer = null
+var weapon_handler: WeaponHandler = null
 
 func _ready() -> void:
     assert(model != null, "Model is not set")
@@ -20,13 +22,23 @@ func _ready() -> void:
     player_input = get_node_or_null("PlayerInput")
     assert(player_input != null, "Player input missing")
 
+    weapon_synchronizer = get_node_or_null("WeaponSynchronizer")
+    assert(weapon_synchronizer != null, "WeaponSynchronizer missing")
+
+    weapon_handler = get_node_or_null("WeaponHandler")
+    assert(weapon_handler != null, "WeaponHandler missing")
+
+    #TODO: remove debug code
+    weapon_handler.load_secondary_weapon(load("res://scenes/weapons/pistol/pistol.tscn"))
+    weapon_handler.load_secondary_weapon(load("res://scenes/weapons/rifle/rifle.tscn"))
+
     if peer_id == multiplayer.get_unique_id():
         model.hide()
     else:
         hands.hide()
         %HUDCanvasLayer.hide()
 
-func _rollback_tick(delta: float, tick: int, is_fresh: bool) -> void:
+func _rollback_tick(_delta: float, _tick: int, _is_fresh: bool) -> void:
     # Handle look left and right
     rotate_object_local(Vector3(0, 1, 0), player_input.look_angle.x)
 
