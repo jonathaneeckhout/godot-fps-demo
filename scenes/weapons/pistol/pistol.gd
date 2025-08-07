@@ -46,7 +46,7 @@ func _rollback_tick(_dt, tick: int, _if):
 
 func _after_loop():
     if fire_action.has_confirmed():
-        print("{0}: Pang".format([player.peer_id]))
+        print("player:{0} from: {1}: Pang".format([player.peer_id, multiplayer.get_unique_id()]))
 
 func _can_fire() -> bool:
     return NetworkTime.seconds_between(last_fire, NetworkRollback.tick) >= fire_cooldown

@@ -186,8 +186,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
 [node name="RollbackSynchronizer" type="Node" parent="." node_paths=PackedStringArray("root")]
 script = ExtResource("3_gmlin")
 root = NodePath("..")
-state_properties = Array[String]([":transform"])
-input_properties = Array[String](["PlayerInput:direction", "PlayerInput:look_angle", "PlayerInput:jump"])
+state_properties = Array[String]([":transform", "Head/Hands/RightHand/Pistol:last_fire"])
+input_properties = Array[String](["PlayerInput:direction", "PlayerInput:look_angle", "PlayerInput:jump", "PlayerInput:fire"])
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 
 [node name="TickInterpolator" type="Node" parent="." node_paths=PackedStringArray("root")]
