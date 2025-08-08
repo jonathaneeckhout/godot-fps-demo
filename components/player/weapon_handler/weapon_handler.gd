@@ -1,4 +1,5 @@
 class_name WeaponHandler
+# This node needs to be 3D as it contains children that need to perform physics queries
 extends Node3D
 
 ## Where to put the weapon for the local player

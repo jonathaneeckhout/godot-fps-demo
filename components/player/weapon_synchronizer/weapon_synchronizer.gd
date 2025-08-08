@@ -10,6 +10,7 @@ signal fired()
 
 var player: Player = null
 var player_input: PlayerInput = null
+var health_synchronizer: HealthSynchronizer = null
 var rollback_synchronizer: RollbackSynchronizer = null
 
 var weapon: Weapon = null
@@ -32,12 +33,16 @@ func _ready() -> void:
     rollback_synchronizer = player.get_node_or_null("RollbackSynchronizer")
     assert(rollback_synchronizer != null, "RollbackSynchronizer not found")
 
+    health_synchronizer = player.get_node("HealthSynchronizer")
+    assert(health_synchronizer != null, "HealthSynchronizer not found")
+
     rollback_synchronizer.add_state(self, "last_fire")
 
     assert(muzzle != null, "Muzzle not set")
 
     fire_action.mutate(self) # Mutate self, so firing code can run
-    fire_action.mutate(player) # Mutate player
+    fire_action.mutate(player)
+    fire_action.mutate(health_synchronizer) # Mutate player's healthsynchronizer
 
     NetworkTime.after_tick_loop.connect(_after_loop)
 
@@ -80,7 +85,6 @@ func _after_loop() -> void:
         if weapon:
             weapon.fire_confirmed()
 
-
 func _can_fire() -> bool:
     # You can only fire a weapon
     if weapon == null:
@@ -114,4 +118,10 @@ func _on_hit(hit: Dictionary):
         fire_action.set_context(true)
         is_new_hit = true
 
-    print(hit)
+    var hit_health_synchronizer: HealthSynchronizer = hit.collider.get_node_or_null("HealthSynchronizer")
+    if hit_health_synchronizer == null:
+        return
+
+    hit_health_synchronizer.hurt(weapon.damage)
+
+    NetworkRollback.mutate(hit_health_synchronizer)

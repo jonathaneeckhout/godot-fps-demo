@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://c1117xmdglv32"]
+[gd_scene load_steps=25 format=3 uid="uid://c1117xmdglv32"]
 
 [ext_resource type="Script" uid="uid://044ceg0f6oyw" path="res://scenes/player/player.gd" id="1_8afob"]
 [ext_resource type="PackedScene" uid="uid://ciwdg5wof3vll" path="res://components/player/player_input/player_input.tscn" id="2_dovo2"]
@@ -6,6 +6,8 @@
 [ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="4_lvxji"]
 [ext_resource type="PackedScene" uid="uid://duwpp7fduyeq5" path="res://components/player/weapon_synchronizer/weapon_synchronizer.tscn" id="6_75vfm"]
 [ext_resource type="PackedScene" uid="uid://cul8cwl4a1081" path="res://components/player/weapon_handler/weapon_handler.tscn" id="7_0owmy"]
+[ext_resource type="PackedScene" uid="uid://bbloho3ngdrn8" path="res://components/player/health_synchronizer/health_synchronizer.tscn" id="7_5gtgg"]
+[ext_resource type="PackedScene" uid="uid://d2cp7q8irsx5b" path="res://components/player/health_bar/health_bar.tscn" id="7_qek5x"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ya1xr"]
 
@@ -198,8 +200,26 @@ muzzle = NodePath("../Head/Hands/Muzzle")
 local_player_weapon_location = NodePath("../Head/Hands/RightHand/LocalWeaponLocation")
 other_player_weapon_location = NodePath("../Model/Body/RightHand/OtherWeaponLocation")
 
+[node name="HealthSynchronizer" parent="." instance=ExtResource("7_5gtgg")]
+
 [node name="HUDCanvasLayer" type="CanvasLayer" parent="."]
 unique_name_in_owner = true
+
+[node name="MarginContainer" type="MarginContainer" parent="HUDCanvasLayer"]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -256.0
+offset_bottom = 40.0
+grow_horizontal = 0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="HealthBar" parent="HUDCanvasLayer/MarginContainer" node_paths=PackedStringArray("health_synchronizer") instance=ExtResource("7_qek5x")]
+layout_mode = 2
+health_synchronizer = NodePath("../../../HealthSynchronizer")
 
 [node name="Label" type="Label" parent="HUDCanvasLayer"]
 anchors_preset = 8
