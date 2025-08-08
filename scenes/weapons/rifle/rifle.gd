@@ -1,8 +1,9 @@
 class_name Rifle
 extends Weapon
 
+func _on_fired(_hit: Dictionary) -> void:
+    %Blast.show()
+    %BlastTimer.start()
 
-func _ready() -> void:
-    fire_cooldown = 0.5
-    damage = 20
-    automatic = true
+func _on_blast_timer_timeout() -> void:
+    %Blast.hide()

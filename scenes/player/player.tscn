@@ -1,8 +1,7 @@
-[gd_scene load_steps=24 format=3 uid="uid://c1117xmdglv32"]
+[gd_scene load_steps=23 format=3 uid="uid://c1117xmdglv32"]
 
 [ext_resource type="Script" uid="uid://044ceg0f6oyw" path="res://scenes/player/player.gd" id="1_8afob"]
 [ext_resource type="PackedScene" uid="uid://ciwdg5wof3vll" path="res://components/player/player_input/player_input.tscn" id="2_dovo2"]
-[ext_resource type="PackedScene" uid="uid://cqpsi760d154r" path="res://scenes/weapons/pistol/pistol.tscn" id="2_p47bc"]
 [ext_resource type="Script" uid="uid://d350u8evihs1u" path="res://addons/netfox/rollback/rollback-synchronizer.gd" id="3_gmlin"]
 [ext_resource type="Script" uid="uid://dour8fehaaugp" path="res://addons/netfox/tick-interpolator.gd" id="4_lvxji"]
 [ext_resource type="PackedScene" uid="uid://duwpp7fduyeq5" path="res://components/player/weapon_synchronizer/weapon_synchronizer.tscn" id="6_75vfm"]
@@ -183,7 +182,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1)
 [node name="RollbackSynchronizer" type="Node" parent="." node_paths=PackedStringArray("root")]
 script = ExtResource("3_gmlin")
 root = NodePath("..")
-state_properties = Array[String]([":transform", "WeaponSynchronizer:last_fire"])
+state_properties = Array[String]([":transform"])
 metadata/_custom_type_script = "uid://d350u8evihs1u"
 
 [node name="TickInterpolator" type="Node" parent="." node_paths=PackedStringArray("root")]
@@ -198,7 +197,6 @@ muzzle = NodePath("../Head/Hands/Muzzle")
 [node name="WeaponHandler" parent="." node_paths=PackedStringArray("local_player_weapon_location", "other_player_weapon_location") instance=ExtResource("7_0owmy")]
 local_player_weapon_location = NodePath("../Head/Hands/RightHand/LocalWeaponLocation")
 other_player_weapon_location = NodePath("../Model/Body/RightHand/OtherWeaponLocation")
-starter_weapon = ExtResource("2_p47bc")
 
 [node name="HUDCanvasLayer" type="CanvasLayer" parent="."]
 unique_name_in_owner = true

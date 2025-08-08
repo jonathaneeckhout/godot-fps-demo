@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://dt4q2fdxtylxi"]
+[gd_scene load_steps=12 format=3 uid="uid://dt4q2fdxtylxi"]
 
 [ext_resource type="Script" uid="uid://cnaibm774dc6y" path="res://scenes/weapons/rifle/rifle.gd" id="1_ch8gi"]
 
@@ -32,8 +32,21 @@ top_radius = 0.01
 bottom_radius = 0.01
 height = 0.01
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oaqv7"]
+transparency = 1
+albedo_color = Color(0.756863, 0.643137, 0.168627, 0.670588)
+
+[sub_resource type="SphereMesh" id="SphereMesh_lvkgm"]
+material = SubResource("StandardMaterial3D_oaqv7")
+radius = 0.1
+height = 0.2
+
 [node name="Rifle" type="Node3D"]
 script = ExtResource("1_ch8gi")
+type = 1
+fire_cooldown = 0.2
+damage = 20
+automatic = true
 
 [node name="Body" type="MeshInstance3D" parent="."]
 transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0.05, 0.2)
@@ -52,3 +65,16 @@ skeleton = NodePath("../..")
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="Body"]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0.3)
 mesh = SubResource("CylinderMesh_f6ouy")
+
+[node name="Blast" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0551978, 0.77698)
+visible = false
+mesh = SubResource("SphereMesh_lvkgm")
+
+[node name="BlastTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+wait_time = 0.05
+one_shot = true
+
+[connection signal="timeout" from="BlastTimer" to="." method="_on_blast_timer_timeout"]

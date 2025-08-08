@@ -28,9 +28,9 @@ func _ready() -> void:
     weapon_handler = get_node_or_null("WeaponHandler")
     assert(weapon_handler != null, "WeaponHandler missing")
 
-    #TODO: remove debug code
-    weapon_handler.load_secondary_weapon(load("res://scenes/weapons/pistol/pistol.tscn"))
-    weapon_handler.load_secondary_weapon(load("res://scenes/weapons/rifle/rifle.tscn"))
+    # #TODO: remove debug code
+    weapon_handler.add_weapon(load("res://scenes/weapons/pistol/pistol.tscn").instantiate())
+    weapon_handler.add_weapon(load("res://scenes/weapons/rifle/rifle.tscn").instantiate())
 
     if peer_id == multiplayer.get_unique_id():
         model.hide()

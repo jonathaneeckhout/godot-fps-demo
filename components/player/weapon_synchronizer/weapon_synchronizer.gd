@@ -26,6 +26,8 @@ func _ready() -> void:
     rollback_synchronizer = player.get_node_or_null("RollbackSynchronizer")
     assert(rollback_synchronizer != null, "RollbackSynchronizer not found")
 
+    rollback_synchronizer.add_state(self, "last_fire")
+
     assert(muzzle != null, "Muzzle not set")
 
     fire_action.mutate(self) # Mutate self, so firing code can run
@@ -85,11 +87,13 @@ func _fire() -> void:
     
     last_fire = NetworkRollback.tick
 
+
     var hit: Dictionary = weapon.fire()
-    if hit.is_empty():
-        return
 
     fired.emit(hit)
+
+    if hit.is_empty():
+        return
 
     _on_hit(hit)
 

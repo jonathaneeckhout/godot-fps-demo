@@ -1,7 +1,12 @@
 class_name Weapon
 extends Node3D
 
+enum WEAPON_TYPES {PRIMARY, SECONDARY}
+
 signal fired()
+
+## What type of weapon it is
+@export var type: WEAPON_TYPES = WEAPON_TYPES.PRIMARY
 
 ## Time between 2 shots
 @export var fire_cooldown: float = 1.0
@@ -14,12 +19,13 @@ signal fired()
 
 @export var muzzle: Node3D = null
 
+
 func fire() -> Dictionary:
     assert(muzzle != null, "Muzzle can't be null")
 
     return _detect_hit()
 
-func fire_confirmed()-> void:
+func fire_confirmed() -> void:
     fired.emit()
 
 func _detect_hit() -> Dictionary:
@@ -33,3 +39,9 @@ func _detect_hit() -> Dictionary:
     )
 
     return space.intersect_ray(query)
+
+func connect_to_weapon_synchronizer(weapon_synchronizer: WeaponSynchronizer) -> void:
+    weapon_synchronizer.fired.connect(_on_fired)
+
+func _on_fired(hit: Dictionary) -> void:
+    pass

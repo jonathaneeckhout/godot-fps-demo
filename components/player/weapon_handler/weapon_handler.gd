@@ -1,7 +1,5 @@
 class_name WeaponHandler
-extends Node
-
-static var _logger: _NetfoxLogger = _NetfoxLogger.for_netfox("RollbackSynchronizer")
+extends Node3D
 
 ## Where to put the weapon for the local player
 @export var local_player_weapon_location: Node3D = null
@@ -9,17 +7,21 @@ static var _logger: _NetfoxLogger = _NetfoxLogger.for_netfox("RollbackSynchroniz
 ## Where to put the weapon for other players
 @export var other_player_weapon_location: Node3D = null
 
-## The weapon which the player starts with
-@export var starter_weapon: PackedScene = null
-
+# Dependencies
 var player: Player = null
 var player_input: PlayerInput = null
 var weapon_synchronizer: WeaponSynchronizer = null
+var rollback_synchronizer: RollbackSynchronizer = null
 
+# Variables
 var primary_weapon: Weapon = null
 var secondary_weapon: Weapon = null
 
-var current_weapon: Weapon
+# Synced States
+var current_weapon: String = ""
+
+# Local States
+var loaded_weapon: Weapon = null
 
 func _ready() -> void:
     player = get_parent()
@@ -31,63 +33,65 @@ func _ready() -> void:
     weapon_synchronizer = player.get_node_or_null("WeaponSynchronizer")
     assert(weapon_synchronizer != null, "Missing WeaponSynchronizer")
 
-    assert(starter_weapon != null, "Please select a starter weapon")
+    rollback_synchronizer = player.get_node_or_null("RollbackSynchronizer")
+    assert(rollback_synchronizer != null, "Missing RollbackSynchronizer")
 
-    load_primary_weapon(starter_weapon)
+    rollback_synchronizer.add_state(self, "current_weapon")
+
+func add_weapon(new_weapon: Weapon) -> void:
+    match new_weapon.type:
+        Weapon.WEAPON_TYPES.PRIMARY:
+            if primary_weapon != null:
+                primary_weapon.queue_free()
+
+            primary_weapon = new_weapon
+
+            %LoadedWeapons.add_child(primary_weapon)
+
+            swap_weapons(false)
+        Weapon.WEAPON_TYPES.SECONDARY:
+            if secondary_weapon != null:
+                secondary_weapon.queue_free()
+
+            secondary_weapon = new_weapon
+
+            %LoadedWeapons.add_child(secondary_weapon)
+
+            swap_weapons(true)
 
 func _rollback_tick(_delta: float, _tick: int, _is_fresh: bool) -> void:
     if player_input.next_weapon:
-        _logger.debug("on {0} for {1}".format([multiplayer.get_unique_id(), player.peer_id]))
         swap_weapons(true)
 
     if player_input.previous_weapon:
         swap_weapons(false)
 
 func swap_weapons(up: bool) -> void:
+    var new_weapon: Weapon = null
     if up:
-        if current_weapon == primary_weapon:
-            set_current_weapon(secondary_weapon)
+        new_weapon = primary_weapon
     else:
-        if current_weapon == secondary_weapon:
-            set_current_weapon(primary_weapon)
+        new_weapon = secondary_weapon
+    
+    if new_weapon != null:
+        if current_weapon != new_weapon.name:
+            weapon_synchronizer.load_weapon(new_weapon)
 
-func load_primary_weapon(weapon: PackedScene) -> void:
-    if primary_weapon != null:
-        primary_weapon.queue_free()
+        current_weapon = new_weapon.name
 
-    primary_weapon = weapon.instantiate()
+func _process(_delta: float) -> void:
+    load_weapon()
+    
+func load_weapon() -> void:
+    if loaded_weapon != null and loaded_weapon.name != current_weapon:
+        loaded_weapon.queue_free()
+        loaded_weapon = null
+    
 
-    primary_weapon.hide()
-
-    if player.peer_id == multiplayer.get_unique_id():
-        local_player_weapon_location.add_child(primary_weapon)
-    else:
-        other_player_weapon_location.add_child(primary_weapon)
-
-    if current_weapon == null:
-        set_current_weapon(primary_weapon)
-
-func load_secondary_weapon(weapon: PackedScene) -> void:
-    if secondary_weapon != null:
-        secondary_weapon.queue_free()
-
-    secondary_weapon = weapon.instantiate()
-    secondary_weapon.hide()
-
-    if player.peer_id == multiplayer.get_unique_id():
-        local_player_weapon_location.add_child(secondary_weapon)
-    else:
-        other_player_weapon_location.add_child(secondary_weapon)
-
-    if current_weapon == null:
-        set_current_weapon(secondary_weapon)
-
-func set_current_weapon(weapon: Weapon) -> void:
-    if current_weapon != null:
-        current_weapon.hide()
-
-    current_weapon = weapon
-
-    current_weapon.show()
-
-    weapon_synchronizer.load_weapon(weapon)
+    if loaded_weapon == null and current_weapon != "":
+        loaded_weapon = %LoadedWeapons.get_node_or_null(current_weapon).duplicate()
+        loaded_weapon.connect_to_weapon_synchronizer(weapon_synchronizer)
+        if player.peer_id == multiplayer.get_unique_id():
+            local_player_weapon_location.add_child(loaded_weapon)
+        else:
+            other_player_weapon_location.add_child(loaded_weapon)
