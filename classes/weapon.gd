@@ -1,6 +1,8 @@
 class_name Weapon
 extends Node3D
 
+static var _logger: _NetfoxLogger = _NetfoxLogger.for_netfox("RollbackSynchronizer")
+
 enum WEAPON_TYPES {PRIMARY, SECONDARY}
 
 signal fired()
@@ -26,7 +28,7 @@ func fire() -> Dictionary:
     return _detect_hit()
 
 func fire_confirmed() -> void:
-    fired.emit()
+    pass
 
 func _detect_hit() -> Dictionary:
     var space := get_world_3d().direct_space_state
@@ -43,5 +45,5 @@ func _detect_hit() -> Dictionary:
 func connect_to_weapon_synchronizer(weapon_synchronizer: WeaponSynchronizer) -> void:
     weapon_synchronizer.fired.connect(_on_fired)
 
-func _on_fired(hit: Dictionary) -> void:
+func _on_fired() -> void:
     pass

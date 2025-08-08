@@ -13,14 +13,12 @@ var player_input: PlayerInput = null
 var weapon_synchronizer: WeaponSynchronizer = null
 var rollback_synchronizer: RollbackSynchronizer = null
 
-# Variables
-var primary_weapon: Weapon = null
-var secondary_weapon: Weapon = null
-
 # Synced States
 var current_weapon: String = ""
 
-# Local States
+# Local Variables
+var primary_weapon: Weapon = null
+var secondary_weapon: Weapon = null
 var loaded_weapon: Weapon = null
 
 func _ready() -> void:

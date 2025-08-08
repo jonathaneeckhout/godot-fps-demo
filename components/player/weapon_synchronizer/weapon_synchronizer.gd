@@ -1,7 +1,8 @@
 class_name WeaponSynchronizer
 extends Node
 
-signal fired(hit: Dictionary)
+# Signals to all connections
+signal fired()
 
 @export var muzzle: Node3D = null
 
@@ -13,8 +14,13 @@ var rollback_synchronizer: RollbackSynchronizer = null
 
 var weapon: Weapon = null
 
+# Synced states
 var last_fire: int = -1
+
+# Local variables
 var firing: bool = false
+
+var last_synced_fire: int = -1
 
 func _ready() -> void:
     player = get_parent()
@@ -31,9 +37,14 @@ func _ready() -> void:
     assert(muzzle != null, "Muzzle not set")
 
     fire_action.mutate(self) # Mutate self, so firing code can run
-    # fire_action.mutate(player) # Mutate player
+    fire_action.mutate(player) # Mutate player
 
     NetworkTime.after_tick_loop.connect(_after_loop)
+
+func _process(_delta: float) -> void:
+    if last_synced_fire != last_fire:
+        last_synced_fire = last_fire
+        fired.emit()
 
 func _rollback_tick(_delta: float, _tick: int, _is_fresh: bool) -> void:
     if rollback_synchronizer.is_predicting():
@@ -84,13 +95,10 @@ func _can_fire() -> bool:
 func _fire() -> void:
     if weapon == null:
         return
-    
+
     last_fire = NetworkRollback.tick
 
-
     var hit: Dictionary = weapon.fire()
-
-    fired.emit(hit)
 
     if hit.is_empty():
         return
